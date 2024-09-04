@@ -79,7 +79,7 @@ def create_optimizer(
         assigned_parameters += f"{group}\n {list(parameters[group].keys())}\n\n"
     logger.debug(assigned_parameters)
 
-    weight_decay = 0 # weight decay is always fine to be 0 because of LORA matrix A already starting with zeros
+    weight_decay = 0.01 # It can be parameterized, but proved to work good in my case.
 
     optimizer_grouped_parameters = [
         {
@@ -111,6 +111,6 @@ def create_optimizer(
 optimizer = create_optimizer(
     opt_model=model,
     base_optimizer=torch.optim.AdamW, # 8 bits adam not supported since there is no need for it
-    lr_ratio = 16.0, # As per LORA+ paper set to 16 for balanced dataset and a large model
+    lr_ratio = 8.0, # As per LORA+ paper set to 8-16 for balanced dataset and a large model
     optimizer_kwargs = {'betas': (0.9, 0.99), 'lr': 1e-4, 'eps': 1e-6, 'weight_decay': 0.0},
 )
